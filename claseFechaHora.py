@@ -42,46 +42,50 @@ class FechaHora:
         self.__m = m
         self.__s = s
 
-    def AdelantarHora(self, h=0, m=0):
+    def AdelantarHora(self, h=0, m=0, s=0):
 
         auxH = self.__h + h
         auxM = self.__m + m
+        auxS = self.__s + s
 
-        if ((h != 0) & (auxH >= 24)):           #esta seccion de codigo podría ir en una función
-            dias = 0                            #porque se reutiliza mas abajo
-            while auxH >= 24:
-                auxH -= 24
-                dias += 1
-            self.aumentarDias(dias)
-            self.__h = auxH
-        else:
-            self.__h = auxH
+        if ((auxS >= 60) or (auxM >= 60) or (auxH >= 24)):
+            if auxS >= 60:
+                minutos = 0
+                while auxS >= 60:
+                    auxS -= 60
+                    minutos += 1
+                auxM += minutos
+            self.__s = auxS
 
-        if ((m !=0) & (auxM >= 60)):
-            horas = 0
-            while auxM >= 60:
-                auxM -= 60
-                horas += 1
-            self.__m = auxM
+            if ((auxM >= 60) or (auxH >= 24)):
+                if auxM >= 60:
+                    horas = 0
+                    while auxM >= 60:
+                        auxM -= 60
+                        horas += 1
+                    auxH += horas
+                self.__m = auxM
 
-            auxH += horas
-            if auxH >= 24:
-                dias = 0
-                while auxH >= 24:
-                    auxH -= 24
-                    dias +=1
-                self.aumentarDias(dias)
+                if auxH >= 24:
+                    dias = 0
+                    while auxH >= 24:
+                        auxH -= 24
+                        dias +=1
+                    self.aumentarDias(dias)
                 self.__h = auxH
             else:
+                self.__m = auxM
                 self.__h = auxH
         else:
+            self.__h = auxH
             self.__m = auxM
+            self.__s = auxS
 
     def aumentarDias(self, dias):
 
         auxDias = self.__d + dias
 
-        if auxDias >= self.__nDiasXMes[self.__mes - 1]:
+        if auxDias > self.__nDiasXMes[self.__mes - 1]:
             indiceMes = self.__mes - 1
             while auxDias >= self.__nDiasXMes[indiceMes]:
                 auxDias -= self.__nDiasXMes[indiceMes]
